@@ -1,0 +1,27 @@
+cmake_minimum_required(VERSION 3.8)
+
+project(app)
+
+#############################
+# Set common compile options
+#############################
+set(CC_FLAGS   "-O2 -Wall -Werror -fpie -fno-plt -mno-pic-data-is-text-relative -msingle-pic-base")
+set(SPEC_FLAGS "--specs=nosys.specs")
+set(LD_FLAGS   "-Wl,-e app_entry -Wl,-T ${CMAKE_CURRENT_SOURCE_DIR}/cmake/linker.ld -Wl,-nostdlib -nostartfiles")
+
+#############################
+# Import toolchain
+#############################
+include (${CMAKE_CURRENT_SOURCE_DIR}/cmake/cortex_m7.cmake)
+
+
+add_executable(app
+    main.c
+)
+
+add_custom_command(
+    TARGET app
+    POST_BUILD
+    COMMAND ${OBJCOPY} -O binary app appmod.bin
+    COMMAND ${OBJDUMP} -d app > app.lst
+)
