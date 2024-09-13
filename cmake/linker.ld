@@ -1,8 +1,7 @@
 
 MEMORY
 {
-  flash (rx) : ORIGIN = 0x00000000, LENGTH = 1M
-  sram (rwx) : ORIGIN = 0x20000000, LENGTH = 256K
+  ram (rwx) : ORIGIN = 0x00000000, LENGTH = 1M
 }
 
 OUTPUT_ARCH(arm)
@@ -24,36 +23,36 @@ SECTIONS
         *(.gcc_except_table)
         *(.gnu.linkonce.r.*)
         _etext = ABSOLUTE(.);
-    } > flash
+    } > ram
 
     .init_section : {
         _sinit = ABSOLUTE(.);
         KEEP(*(SORT_BY_INIT_PRIORITY(.init_array.*) SORT_BY_INIT_PRIORITY(.ctors.*)))
         KEEP(*(.init_array EXCLUDE_FILE(*crtbegin.o *crtbegin?.o *crtend.o *crtend?.o) .ctors))
         _einit = ABSOLUTE(.);
-    } > flash
+    } > ram
 
     .ARM.extab : {
         *(.ARM.extab*)
-    } > flash
+    } > ram
 
     __exidx_start = ABSOLUTE(.);
     .ARM.exidx : {
         *(.ARM.exidx*)
-    } > flash
+    } > ram
     __exidx_end = ABSOLUTE(.);
 
     .tdata : {
         _stdata = ABSOLUTE(.);
         *(.tdata .tdata.* .gnu.linkonce.td.*);
         _etdata = ABSOLUTE(.);
-    } > flash
+    } > ram
 
     .tbss : {
         _stbss = ABSOLUTE(.);
         *(.tbss .tbss.* .gnu.linkonce.tb.* .tcommon);
         _etbss = ABSOLUTE(.);
-    } > flash
+    } > ram
 
     _eronly = ABSOLUTE(.);
 
@@ -64,7 +63,7 @@ SECTIONS
         CONSTRUCTORS
         . = ALIGN(4);
         _edata = ABSOLUTE(.);
-    } > sram AT > flash
+    } > ram AT > ram
 
     .bss : {
         _sbss = ABSOLUTE(.);
@@ -73,7 +72,9 @@ SECTIONS
         *(COMMON)
         . = ALIGN(4);
         _ebss = ABSOLUTE(.);
-    } > sram
+    } > ram
+
+    _module_end = ABSOLUTE(.);
 
     /* Stabs debugging sections. */
 
