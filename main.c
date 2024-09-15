@@ -1,12 +1,25 @@
 #include <stdint.h>
 
 char buffer[300] = {"xxxxxxxxxxxxyxxxxxxxxxxxxxxxxxxxxxxxx0xxxxxxxxxxxxxxxxxxxxzxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"};
+static int test_array[] = {
+    0x1234,
+    0x4567,
+    0xabcd,
+    0xdeef,
+    0xbc36,
+    0x9678
+};
 
 int app_entry(int (*dbgfmt)(const char *fmt, ...)) {
     if (dbgfmt) {
+        int temp = 0;
         // dbgfmt("dynamic load successful!\n");
         buffer[0] = buffer[1] ^ buffer[50] ^ buffer[32];
-        dbgfmt("%s", buffer);
+        for (int i = 0; i < sizeof(test_array)/sizeof(test_array[0]); i++) {
+            temp ^= test_array[i];
+            test_array[i] += temp;
+        }
+        dbgfmt("%s :%d", buffer, temp);
     }
     return 0;
 }
