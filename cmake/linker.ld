@@ -74,6 +74,9 @@ SECTIONS
         _ebss = ABSOLUTE(.);
     } > ram
 
+    _stext_size = _etext - _stext;
+    _sdata_size = _edata - _sdata;
+    _sbss_size = _ebss - _sbss;
     _module_end = ABSOLUTE(.);
 
     /* Stabs debugging sections. */
